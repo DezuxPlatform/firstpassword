@@ -35,23 +35,25 @@
             const confirmPassword = document.getElementById('confirmPassword').value;
 
             if (password === confirmPassword && password.length === 4) {
-                // Проверяем, доступен ли объект Telegram
+                // Проверяем, доступен ли объект Telegram и отправляем данные
                 if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-                    Telegram.WebApp.sendData(password);  // Отправляем пароль в бот
+                    console.log('Отправка данных в бота:', password); // Лог для проверки
+                    Telegram.WebApp.sendData(password);  // Отправка пароля в бот
                     Telegram.WebApp.close();  // Закрываем Web App
                 } else {
-                    console.error("Telegram Web App не доступен. Тестируйте Web App через Telegram.");
+                    console.error("Telegram Web App не доступен. Тестируйте через Telegram.");
                 }
             } else {
-                alert('Пароли не совпадают или не 4-значный пароль!');
+                alert('Пароли не совпадают или пароль не 4-значный!');
             }
         }
 
         // Проверяем инициализацию Web App
         if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+            console.log('Telegram Web App готов к работе');
             Telegram.WebApp.ready();  // Инициализируем Web App
         } else {
-            console.error("Telegram Web App не доступен. Тестируйте Web App через Telegram.");
+            console.error("Telegram Web App не доступен. Тестируйте через Telegram.");
         }
     </script>
 </body>
