@@ -36,8 +36,8 @@
 
             if (password === confirmPassword && password.length === 4) {
                 if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-                    console.log('Отправка данных в бота:', password); // Лог для проверки
-                    alert('Пароль отправлен: ' + password);  // Уведомление для пользователя
+                    console.log('Telegram.WebApp доступен. Пароль:', password);  // Логирование для проверки
+                    alert('Пароль отправлен: ' + password);
                     Telegram.WebApp.sendData(password);  // Отправляем данные в бот
                     Telegram.WebApp.close();  // Закрываем Web App
                 } else {
@@ -48,6 +48,9 @@
                 alert('Пароли не совпадают или пароль не 4-значный!');
             }
         }
+
+        // Логируем объект Telegram.WebApp при загрузке страницы
+        console.log('Объект Telegram.WebApp:', Telegram.WebApp);
 
         // Инициализируем Web App
         if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
