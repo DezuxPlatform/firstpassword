@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Создание пароля</title>
     <style>
+        /* Стили для страницы */
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -88,23 +89,21 @@
         errorEl.textContent = '';
         successEl.textContent = '';
 
-        // Проверка, что пароли совпадают
         if (password1 !== password2) {
             errorEl.textContent = 'Пароли не совпадают';
             return;
         }
 
-        // Проверка, что пароль состоит из 4 цифр
         if (!/^\d{4}$/.test(password1)) {
             errorEl.textContent = 'Пароль должен состоять из 4 цифр';
             return;
         }
 
-        // Получение Telegram ID через Web App API
+        // Получаем Telegram ID через Web App API
         const telegramId = window.Telegram.WebApp.initDataUnsafe.user.id;
 
         // Отправляем данные на сервер
-        const response = await fetch('https://dezuxbot-production.up.railway.app/api/savePassword', {  // ЗАМЕНИ на URL своего API
+        const response = await fetch('https://dezuxbot-production.up.railway.app/api/savePassword', {  // Заменить на URL своего API
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
