@@ -1,66 +1,125 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Установите пароль</title>
+    <title>Создание пароля</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f7f7f7;
+        }
+
+        .container {
+            background-color: #fff;
             padding: 20px;
-        }
-        input {
-            font-size: 24px;
-            padding: 10px;
-            width: 150px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
         button {
             padding: 10px 20px;
-            font-size: 18px;
+            font-size: 16px;
+            color: white;
+            background-color: #0088cc;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
             margin-top: 10px;
+        }
+
+        button:disabled {
+            background-color: #999;
+        }
+
+        p.error {
+            color: red;
+            font-size: 14px;
+        }
+
+        p.success {
+            color: green;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <h1>Установите пароль</h1>
-    <input type="password" id="password" maxlength="4" placeholder="Введите пароль"><br>
-    <input type="password" id="confirmPassword" maxlength="4" placeholder="Подтвердите пароль"><br>
-    <button onclick="submitPassword()">Установить</button>
 
-    <script>
-        function submitPassword() {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
+<div class="container">
+    <h1>Создание пароля</h1>
 
-            if (password === confirmPassword && password.length === 4) {
-                if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-                    console.log('Telegram.WebApp доступен. Пароль:', password);  // Логирование для проверки
-                    alert('Пароль отправлен: ' + password);
-                    Telegram.WebApp.sendData(password);  // Отправляем данные в бот
-                    Telegram.WebApp.close();  // Закрываем Web App
-                } else {
-                    console.error("Ошибка: Web App должен быть открыт через Telegram.");
-                    alert("Ошибка: Web App должен быть открыт через Telegram.");
-                }
-            } else {
-                alert('Пароли не совпадают или пароль не 4-значный!');
-            }
+    <input type="password" id="password1" placeholder="Введите 4-значный пароль" maxlength="4" pattern="\d*">
+    <input type="password" id="password2" placeholder="Повторите пароль" maxlength="4" pattern="\d*">
+    
+    <p id="error" class="error"></p>
+    <p id="success" class="success"></p>
+    
+    <button id="submitPassword">Создать пароль</button>
+</div>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+    document.querySelector('#submitPassword').addEventListener('click', async function () {
+        const password1 = document.querySelector('#password1').value;
+        const password2 = document.querySelector('#password2').value;
+        const errorEl = document.querySelector('#error');
+        const successEl = document.querySelector('#success');
+
+        errorEl.textContent = '';
+        successEl.textContent = '';
+
+        // Проверка, что пароли совпадают
+        if (password1 !== password2) {
+            errorEl.textContent = 'Пароли не совпадают';
+            return;
         }
 
-        // Логируем объект Telegram.WebApp при загрузке страницы
-        console.log('Объект Telegram.WebApp:', Telegram.WebApp);
+        // Проверка, что пароль состоит из 4 цифр
+        if (!/^\d{4}$/.test(password1)) {
+            errorEl.textContent = 'Пароль должен состоять из 4 цифр';
+            return;
+        }
 
-        // Инициализируем Web App
-        if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-            Telegram.WebApp.ready();  // Web App готов
-            console.log('Web App инициализирован через Telegram');
-            alert('Web App готов к работе');
+        // Получение Telegram ID через Web App API
+        const telegramId = window.Telegram.WebApp.initDataUnsafe.user.id;
+
+        // Отправляем данные на сервер
+        const response = await fetch('https://dezuxbot-production.up.railway.app/api/savePassword', {  // ЗАМЕНИ на URL своего API
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ telegramId, password: password1 })
+        });
+
+        if (response.ok) {
+            successEl.textContent = 'Пароль успешно сохранен';
+            Telegram.WebApp.close();  // Закрываем Mini App после успешного сохранения пароля
         } else {
-            console.error("Ошибка: Web App должен быть открыт через Telegram.");
-            alert("Ошибка: Web App должен быть открыт через Telegram.");
+            errorEl.textContent = 'Ошибка при сохранении пароля';
         }
-    </script>
+    });
+</script>
+
 </body>
 </html>
