@@ -33,18 +33,26 @@
         function submitPassword() {
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-            
+
             if (password === confirmPassword && password.length === 4) {
-                // Отправляем данные в бота через Telegram Web App
-                Telegram.WebApp.sendData(password);  // Отправка пароля в бот
-                Telegram.WebApp.close();  // Закрываем приложение
+                // Проверяем, доступен ли объект Telegram
+                if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+                    Telegram.WebApp.sendData(password);  // Отправляем пароль в бот
+                    Telegram.WebApp.close();  // Закрываем Web App
+                } else {
+                    console.error("Telegram Web App не доступен. Тестируйте Web App через Telegram.");
+                }
             } else {
-                alert('Пароли не совпадают или не являются 4-х значными!');
+                alert('Пароли не совпадают или не 4-значный пароль!');
             }
         }
 
-        // Инициализация Web App
-        Telegram.WebApp.ready();
+        // Проверяем инициализацию Web App
+        if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+            Telegram.WebApp.ready();  // Инициализируем Web App
+        } else {
+            console.error("Telegram Web App не доступен. Тестируйте Web App через Telegram.");
+        }
     </script>
 </body>
 </html>
