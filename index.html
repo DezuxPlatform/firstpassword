@@ -35,12 +35,13 @@
             const confirmPassword = document.getElementById('confirmPassword').value;
 
             if (password === confirmPassword && password.length === 4) {
-                // Проверяем, доступен ли объект Telegram
                 if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
                     console.log('Отправка данных в бота:', password); // Лог для проверки
-                    Telegram.WebApp.sendData(password);  // Отправляем пароль в бот
+                    alert('Пароль отправлен: ' + password);  // Уведомление
+                    Telegram.WebApp.sendData(password);  // Отправляем данные в бот
                     Telegram.WebApp.close();  // Закрываем Web App
                 } else {
+                    console.error("Ошибка: Web App должен быть открыт через Telegram.");
                     alert("Ошибка: Web App должен быть открыт через Telegram.");
                 }
             } else {
@@ -50,9 +51,12 @@
 
         // Инициализируем Web App
         if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-            Telegram.WebApp.ready();  // Готовность Web App
+            Telegram.WebApp.ready();  // Web App готов
+            console.log('Web App инициализирован через Telegram');
+            alert('Web App готов к работе');
         } else {
             console.error("Ошибка: Web App должен быть открыт через Telegram.");
+            alert("Ошибка: Web App должен быть открыт через Telegram.");
         }
     </script>
 </body>
