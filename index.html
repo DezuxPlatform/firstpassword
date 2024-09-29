@@ -30,36 +30,18 @@
     <button onclick="submitPassword()">Установить</button>
 
     <script>
-        async function submitPassword() {
+        function submitPassword() {
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
 
             if (password === confirmPassword && password.length === 4) {
+                // Проверяем, доступен ли объект Telegram
                 if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-                    const userId = Telegram.WebApp.initDataUnsafe.user.id; // Получаем Telegram ID
-
-                    // Отправляем данные на сервер (в MongoDB через API)
-                    const response = await fetch('https://<ваш-домен>/save-password', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            telegramId: userId,
-                            password: password
-                        })
-                    });
-
-                    const result = await response.json();
-
-                    if (result.success) {
-                        Telegram.WebApp.sendData('Пароль успешно установлен');  // Закрываем Web App
-                        Telegram.WebApp.close();  // Закрываем Web App
-                    } else {
-                        alert('Ошибка: не удалось сохранить пароль');
-                    }
+                    console.log('Отправка данных в бота:', password); // Лог для проверки
+                    Telegram.WebApp.sendData(password);  // Отправляем пароль в бот
+                    Telegram.WebApp.close();  // Закрываем Web App
                 } else {
-                    alert("Telegram Web App не доступен. Тестируйте через Telegram.");
+                    alert("Ошибка: Web App должен быть открыт через Telegram.");
                 }
             } else {
                 alert('Пароли не совпадают или пароль не 4-значный!');
@@ -68,9 +50,9 @@
 
         // Инициализируем Web App
         if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-            Telegram.WebApp.ready();
+            Telegram.WebApp.ready();  // Готовность Web App
         } else {
-            console.error("Telegram Web App не доступен. Тестируйте через Telegram.");
+            console.error("Ошибка: Web App должен быть открыт через Telegram.");
         }
     </script>
 </body>
