@@ -3,64 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Установите пароль</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-        }
-        input {
-            font-size: 24px;
-            padding: 10px;
-            width: 150px;
-            text-align: center;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 18px;
-            margin-top: 10px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Установите пароль</h1>
-    <input type="password" id="password" maxlength="4" placeholder="Введите пароль"><br>
-    <input type="password" id="confirmPassword" maxlength="4" placeholder="Подтвердите пароль"><br>
-    <button onclick="submitPassword()">Установить</button>
-
+    <title>Тест Web App</title>
     <script>
-        function submitPassword() {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-
-            if (password === confirmPassword && password.length === 4) {
-                if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-                    console.log('Telegram.WebApp доступен. Пароль:', password);  // Логирование для проверки
-                    alert('Пароль отправлен: ' + password);
-                    Telegram.WebApp.sendData(password);  // Отправляем данные в бот
-                    Telegram.WebApp.close();  // Закрываем Web App
-                } else {
-                    console.error("Ошибка: Web App должен быть открыт через Telegram.");
-                    alert("Ошибка: Web App должен быть открыт через Telegram.");
-                }
+        window.onload = function() {
+            if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+                console.log('Telegram Web App инициализирован');
+                alert('Telegram Web App готов к работе');
             } else {
-                alert('Пароли не совпадают или пароль не 4-значный!');
+                console.error("Ошибка: Web App должен быть открыт через Telegram.");
+                alert("Ошибка: Web App должен быть открыт через Telegram.");
             }
         }
-
-        // Логируем объект Telegram.WebApp при загрузке страницы
-        console.log('Объект Telegram.WebApp:', Telegram.WebApp);
-
-        // Инициализируем Web App
-        if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-            Telegram.WebApp.ready();  // Web App готов
-            console.log('Web App инициализирован через Telegram');
-            alert('Web App готов к работе');
-        } else {
-            console.error("Ошибка: Web App должен быть открыт через Telegram.");
-            alert("Ошибка: Web App должен быть открыт через Telegram.");
-        }
     </script>
+</head>
+<body>
+    <h1>Проверка Web App</h1>
 </body>
 </html>
+
